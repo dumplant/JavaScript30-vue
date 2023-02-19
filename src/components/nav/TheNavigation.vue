@@ -3,10 +3,13 @@
         <nav>
             <ul>
                 <li>
-                    <router-link to="/01">drumkit</router-link>
+                    <router-link to="/01">Drum Kit</router-link>
                 </li>
                 <li>
-                    <router-link to="/02">clcok</router-link>
+                    <router-link to="/02">Clcok</router-link>
+                </li>
+                <li>
+                    <router-link to="/03">CSS Variable</router-link>
                 </li>
             </ul>
         </nav>
