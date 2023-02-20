@@ -11,6 +11,9 @@
                 <li>
                     <router-link to="/03">CSS Variable</router-link>
                 </li>
+                <li>
+                    <router-link to="/08">HTML Canvas</router-link>
+                </li>
             </ul>
         </nav>
     </header>
