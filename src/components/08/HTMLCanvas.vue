@@ -1,7 +1,14 @@
 <template>
     <div id="canvas">
-
-        <canvas id="draw" @mousedown="setMouse($event)" @mouseup="setMouse($event)" @mousemove="draw($event)"></canvas>
+        <canvas id="draw" 
+        @mousedown="setDraw($event)" 
+        @mousemove="draw($event)"
+        @mouseup="setNotDraw($event)"
+        @mouseout="setNotDraw($event)"
+        @touchstart="setDraw($event)" 
+        @touchmove="draw($event)"
+        @touchend="setNotDraw($event)"
+        @touchcancel="setNotDraw($event)"></canvas>
     </div>
 </template>
 
@@ -11,7 +18,7 @@ let ctx;
 export default {
     data() {
         return {
-            mouseIsPressed: false,
+            drawing: false,
             lastX: 0,
             lastY: 0,
             hue: 0
@@ -19,9 +26,6 @@ export default {
     },
     mounted() {
         this.initCanvas()
-        window.onresize = () => {
-            this.initCanvas()
-        }
     },
     methods: {
         initCanvas() {
@@ -34,20 +38,33 @@ export default {
             ctx.lineCap = "round";
             ctx.lineJoin = "round";
         },
-        setMouse(e) {
-            this.mouseIsPressed = !this.mouseIsPressed;
-            [this.lastX, this.lastY] = [e.offsetX, e.offsetY];
+        setDraw(e) {
+            this.drawing = true;
+            if (e.type == "mousedown") {
+                [this.lastX, this.lastY] = [e.offsetX, e.offsetY];
+            } else {
+                [this.lastX, this.lastY] = [e.changedTouches[0].clientX, e.changedTouches[0].clientY];
+            }
+            
+        },
+        setNotDraw() {
+            this.drawing = false;
         },
         draw(e) {
-            if (this.mouseIsPressed) {
-
-                
+            if (this.drawing) {
                 ctx.strokeStyle = `hsl(${this.hue}, 90%, 50%)`;
                 if (this.hue >= 360) this.hue = 0;
                 this.hue++;
-
-                let x = e.offsetX;
-                let y = e.offsetY;
+                let x;
+                let y;
+                if (e.type == "mousemove") {
+                    x = e.offsetX;
+                    y = e.offsetY;
+                } else {
+                    x = e.changedTouches[0].clientX;
+                    y = e.changedTouches[0].clientY;
+                }
+                
 
                 ctx.beginPath();
 
@@ -55,8 +72,6 @@ export default {
                 ctx.lineTo(x, y);
                 ctx.stroke();
                 [this.lastX, this.lastY] = [x, y];
-
-
             }
         }
     }
